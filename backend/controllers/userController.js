@@ -62,7 +62,12 @@ const logoutUser = async (req, res) => {
   try {
     req.session.destroy((err) => {
       if (err) return res.status(500).json({ message: "Could not log out" });
-      res.clearCookie("stc.sid", { path: "/" });
+      res.clearCookie(process.env.SESSION_NAME || "stc.sid", {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      });
       res.json({ message: "Logged out" });
     });
   } catch (err) {
