@@ -12,8 +12,8 @@ const Dashboard = () => {
   const fetchAll = async () => {
     try {
       const res = await api.get("/assignments");
-      // Filter to show only the teacher's own assignments
-      setAssignments(res.data.filter((a) => a.teacher?._id === user?._id));
+      // Show all assignments, but highlight or indicate if created by the teacher
+      setAssignments(res.data);
     } catch (err) {
       console.error("Error fetching assignments:", err);
       alert("Failed to load assignments. Please try again.");
