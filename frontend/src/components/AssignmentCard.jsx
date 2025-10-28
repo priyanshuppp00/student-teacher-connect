@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 const AssignmentCard = ({ assignment, onUpdate, onDelete }) => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const [work, setWork] = useState("");
   const [form, setForm] = useState({
     title: assignment.title,
     subject: assignment.subject,
@@ -55,6 +56,25 @@ const AssignmentCard = ({ assignment, onUpdate, onDelete }) => {
 
   const isTeacher =
     user?.role === "Teacher" && assignment.teacher?._id == user._id;
+  const isStudent = user?.role === "Student";
+
+  const handleSubmitWork = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await api.post("/submissions", {
+        assignmentId: assignment._id,
+        work,
+      });
+      alert("Work submitted successfully!");
+      setWork("");
+    } catch (err) {
+      console.error("Error submitting work:", err);
+      alert(err?.response?.data?.message || "Failed to submit work");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-white p-4 rounded shadow">
@@ -121,6 +141,27 @@ const AssignmentCard = ({ assignment, onUpdate, onDelete }) => {
             <div className="text-sm text-gray-500">{deadlineStr}</div>
           </div>
           <p className="mt-3 text-gray-700">{assignment.description}</p>
+
+          {isStudent && (
+            <form onSubmit={handleSubmitWork} className="mt-3 space-y-2">
+              <textarea
+                value={work}
+                onChange={(e) => setWork(e.target.value)}
+                placeholder="Enter your work here..."
+                required
+                className="w-full p-2 rounded border"
+                rows="3"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-3 py-1 bg-green-600 text-white rounded"
+              >
+                {loading ? "Submitting..." : "Submit Work"}
+              </button>
+            </form>
+          )}
+
           {isTeacher && (
             <div className="mt-3 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
               <button
