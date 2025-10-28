@@ -5,13 +5,12 @@ const {
   updateAssignment,
   deleteAssignment,
 } = require("../controllers/assignmentController.js");
-const { ensureTeacher } = require("../middleware/authMiddleware.js");
 
 const router = express.Router();
 
-router.post("/", ensureTeacher, createAssignment);
+router.post("/", createAssignment);
 router.get("/", getAssignments);
-router.put("/:id", ensureTeacher, updateAssignment);
-router.delete("/:id", ensureTeacher, deleteAssignment);
+router.put("/:id", updateAssignment);
+router.delete("/:id", deleteAssignment);
 
 module.exports = router;
