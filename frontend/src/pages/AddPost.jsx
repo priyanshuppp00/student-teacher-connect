@@ -20,7 +20,7 @@ const AddPost = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Optional: Validate date
+    // Validate date
     if (new Date(form.deadline) < new Date()) {
       alert("Deadline must be a future date");
       setLoading(false);
@@ -40,6 +40,9 @@ const AddPost = () => {
     }
   };
 
+  // Today's date as min for deadline
+  const today = new Date().toISOString().split("T")[0];
+
   return (
     <div className="space-y-6 relative px-4">
       {loading && (
@@ -53,43 +56,64 @@ const AddPost = () => {
           <h1 className="text-3xl font-bold text-center mb-4">
             Post New Assignment
           </h1>
+
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Title */}
             <input
               name="title"
               value={form.title}
               onChange={handleChange}
               required
               placeholder="Title"
-              className="w-full px-4 py-2 border rounded-md"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               disabled={loading}
             />
+
+            {/* Subject */}
             <input
               name="subject"
               value={form.subject}
               onChange={handleChange}
               required
               placeholder="Subject"
-              className="w-full px-4 py-2 border rounded-md"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               disabled={loading}
             />
+
+            {/* Description */}
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
-              rows={2}
+              rows={3}
               required
               placeholder="Description"
-              className="w-full px-4 py-2 border rounded-md"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               disabled={loading}
             />
-            <input
-              name="deadline"
-              type="date"
-              value={form.deadline}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md"
-              disabled={loading}
-            />
+
+            {/* Deadline */}
+            <div>
+              <label
+                htmlFor="deadline"
+                className="block text-sm font-semibold text-gray-700 mb-1"
+              >
+                Deadline
+              </label>
+              <input
+                id="deadline"
+                name="deadline"
+                type="date"
+                value={form.deadline}
+                min={today}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                disabled={loading}
+              />
+            </div>
+
+            {/* Submit Button */}
             <div className="flex justify-end">
               <button
                 type="submit"
