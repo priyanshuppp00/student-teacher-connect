@@ -16,6 +16,20 @@ const errorHandler = require("./middleware/errorHandler");
 const PORT = process.env.PORT || 5000;
 const app = express();
 
+// Handle unhandled errors
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err.message);
+  process.exit(1);
+});
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err.message);
+  process.exit(1);
+});
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -45,9 +59,10 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Trust proxy (for Render/production)
+app.set("trust proxy", 1);
 
+// Static files
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   "/uploads",
@@ -58,6 +73,7 @@ app.use(
   })
 );
 
+// Session setup
 app.use(
   session({
     name: process.env.SESSION_NAME || "stc.sid",
@@ -70,25 +86,25 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // secure in production
+      secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   })
 );
 
+// Connect to database
 connectDB();
 
+// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/assignments", assignmentRoutes);
 
-// ------------------- 404 Handler -------------------
-app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
-
+// 404 + Global Error Handler
+app.use((req, res) => res.status(404).json({ message: "Route not found" }));
 app.use(errorHandler);
 
+// Server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
