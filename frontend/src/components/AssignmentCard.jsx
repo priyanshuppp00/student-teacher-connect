@@ -54,7 +54,7 @@ const AssignmentCard = ({ assignment, onUpdate, onDelete }) => {
   };
 
   const isTeacher =
-    user?.role === "Teacher" && assignment.teacher?._id === user._id;
+    user?.role === "Teacher" && assignment.teacher?._id == user._id;
 
   return (
     <div className="bg-white p-4 rounded shadow">
