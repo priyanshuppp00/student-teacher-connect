@@ -104,6 +104,9 @@ const AssignmentCard = ({ assignment, onUpdate, onDelete }) => {
             placeholder="Description"
             className="w-full p-2 rounded border"
           />
+          <label className="block text-sm font-medium text-gray-700">
+            Deadline:
+          </label>
           <input
             name="deadline"
             type="date"
