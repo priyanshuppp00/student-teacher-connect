@@ -30,10 +30,7 @@ app.use(
   })
 );
 
-const FRONTENDS = (
-  process.env.FRONTEND_URL ||
-  "http://localhost:5173,https://your-frontend-url.vercel.app"
-)
+const FRONTENDS = (process.env.FRONTEND_URL || "")
   .split(",")
   .map((url) => url.trim());
 

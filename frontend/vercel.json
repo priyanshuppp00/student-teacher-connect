@@ -3,6 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://student-teacher-connect-q2jm.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
