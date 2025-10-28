@@ -80,7 +80,7 @@ const logoutUser = async (req, res) => {
 const getCurrentUser = (req, res) => {
   if (req.session && req.session.user)
     return res.json({ user: req.session.user });
-  res.json({ user: null });
+  res.status(401).json({ message: "Not authenticated" });
 };
 
 module.exports = { registerUser, loginUser, logoutUser, getCurrentUser };

@@ -1,10 +1,19 @@
 const Assignment = require("../models/assignmentModel.js");
 const User = require("../models/userModel.js");
 
-// ✅ Create assignment
+// ✅ Create assignment (Teacher only)
 const createAssignment = async (req, res) => {
   try {
-    const { title, description, subject, deadline, teacher } = req.body;
+    const sessUser = req.session?.user;
+    if (!sessUser)
+      return res.status(401).json({ message: "Not authenticated" });
+
+    if (sessUser.role !== "Teacher")
+      return res
+        .status(403)
+        .json({ message: "Only teachers can create assignments" });
+
+    const { title, description, subject, deadline } = req.body;
 
     if (!title || !description || !subject)
       return res.status(400).json({ message: "Missing required fields" });
@@ -14,7 +23,7 @@ const createAssignment = async (req, res) => {
       description,
       subject,
       deadline: deadline ? new Date(deadline) : null,
-      teacher: teacher || null,
+      teacher: sessUser._id,
     });
 
     // ✅ Modern way to populate (execPopulate is deprecated)
@@ -44,15 +53,29 @@ const getAssignments = async (req, res) => {
   }
 };
 
-// ✅ Update assignment
+// ✅ Update assignment (Teacher only)
 const updateAssignment = async (req, res) => {
   try {
+    const sessUser = req.session?.user;
+    if (!sessUser)
+      return res.status(401).json({ message: "Not authenticated" });
+
+    if (sessUser.role !== "Teacher")
+      return res
+        .status(403)
+        .json({ message: "Only teachers can update assignments" });
+
     const { id } = req.params;
     const { title, description, subject, deadline } = req.body;
 
     const assignment = await Assignment.findById(id);
     if (!assignment)
       return res.status(404).json({ message: "Assignment not found" });
+
+    if (assignment.teacher.toString() !== sessUser._id)
+      return res
+        .status(403)
+        .json({ message: "You can only update your own assignments" });
 
     assignment.title = title || assignment.title;
     assignment.description = description || assignment.description;
@@ -73,14 +96,28 @@ const updateAssignment = async (req, res) => {
   }
 };
 
-// ✅ Delete assignment
+// ✅ Delete assignment (Teacher only)
 const deleteAssignment = async (req, res) => {
   try {
+    const sessUser = req.session?.user;
+    if (!sessUser)
+      return res.status(401).json({ message: "Not authenticated" });
+
+    if (sessUser.role !== "Teacher")
+      return res
+        .status(403)
+        .json({ message: "Only teachers can delete assignments" });
+
     const { id } = req.params;
 
     const assignment = await Assignment.findById(id);
     if (!assignment)
       return res.status(404).json({ message: "Assignment not found" });
+
+    if (assignment.teacher.toString() !== sessUser._id)
+      return res
+        .status(403)
+        .json({ message: "You can only delete your own assignments" });
 
     await Assignment.findByIdAndDelete(id);
 
