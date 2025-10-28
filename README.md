@@ -1,52 +1,53 @@
-# 🎓 Student-Teacher Connect (MERN)
+# Student-Teacher Connect
 
-A full-stack **Student-Teacher Connect** web application built using the **MERN stack** (MongoDB, Express, React, Node.js).  
-This platform allows teachers to create and manage assignments, while students can view and submit their work — providing seamless communication and collaboration between students and teachers.
+A full-stack **MERN** application designed to connect **students and teachers** through a digital platform.  
+Teachers can post assignments, and students can submit their work efficiently.  
 
 ---
 
-## 🚀 Features
+## 📚 Overview
 
-### 👩‍🏫 For Teachers
+**Student-Teacher Connect** simplifies communication and assignment management between teachers and students.  
+It includes secure login, separate dashboards, and role-based access control.
+
+---
+
+## ✨ Features
+
+### 🧑‍🏫 For Teachers
 - Create and manage assignments  
+- View student submissions  
+- Manage student data  
 - Secure authentication  
-- View all submissions  
-- Role-based access (Teacher only features)
 
 ### 🎓 For Students
-- View and submit assignments  
-- Real-time feedback (optional future feature)  
-- Personalized dashboard
+- View assigned tasks  
+- Submit assignments online  
+- Update personal information  
 
-### 🌐 General Features
+### 🌐 Common Features
 - JWT-based authentication  
-- Secure API with Express middleware  
 - MongoDB database integration  
-- Responsive React frontend with TailwindCSS  
-- Clean REST API structure  
+- Responsive UI using Tailwind CSS  
+- Secure Express API  
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
-**Frontend:**
-- React (Vite)
-- Tailwind CSS
-- Axios
-- React Router DOM
-
-**Backend:**
-- Node.js
-- Express.js
-- MongoDB & Mongoose
-- bcrypt & JWT Authentication
-- dotenv for environment configuration
+| Layer | Technology |
+|:------|:------------|
+| **Frontend** | React (Vite), Tailwind CSS, Axios, React Router DOM |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB with Mongoose |
+| **Authentication** | JWT, bcrypt |
+| **Environment Management** | dotenv |
 
 ---
 
-## ⚙️ Installation Guide
+## ⚙ Installation
 
-### 1️⃣ Clone the Repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/priyanshuppp00/student-teacher-connect.git
 cd student-teacher-connect
