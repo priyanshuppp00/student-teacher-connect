@@ -7,7 +7,6 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 
-// Local Modules
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const assignmentRoutes = require("./routes/assignmentRoutes");
@@ -16,17 +15,14 @@ const errorHandler = require("./middleware/errorHandler");
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-// Handle unhandled errors
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Rejection:", err.message);
-  process.exit(1);
-});
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err.message);
-  process.exit(1);
-});
+// Handle crashes
+process.on("unhandledRejection", (err) =>
+  console.error("Unhandled Rejection:", err)
+);
+process.on("uncaughtException", (err) =>
+  console.error("Uncaught Exception:", err)
+);
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -50,30 +46,14 @@ const FRONTENDS = (process.env.FRONTEND_URL || "")
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (FRONTENDS.includes(origin)) return callback(null, true);
-      return callback(new Error("Not allowed by CORS"));
-    },
+    origin: FRONTENDS,
     credentials: true,
   })
 );
 
-// Trust proxy (for Render/production)
+// Trust proxy before sessions
 app.set("trust proxy", 1);
 
-// Static files
-app.use(express.static(path.join(__dirname, "public")));
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"), {
-    setHeaders(res) {
-      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-    },
-  })
-);
-
-// Session setup
 app.use(
   session({
     name: process.env.SESSION_NAME || "stc.sid",
@@ -87,24 +67,17 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   })
 );
 
-// Connect to database
 connectDB();
 
-// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/assignments", assignmentRoutes);
-
-// 404 + Global Error Handler
 app.use((req, res) => res.status(404).json({ message: "Route not found" }));
 app.use(errorHandler);
 
-// Server
-app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
