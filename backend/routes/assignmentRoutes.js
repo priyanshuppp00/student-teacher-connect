@@ -5,16 +5,13 @@ const {
   updateAssignment,
   deleteAssignment,
 } = require("../controllers/assignmentController.js");
-const {
-  ensureAuth,
-  ensureTeacher,
-} = require("../middleware/authMiddleware.js");
+const { ensureTeacher } = require("../middleware/authMiddleware.js");
 
 const router = express.Router();
 
-router.post("/", ensureAuth, ensureTeacher, createAssignment);
+router.post("/", ensureTeacher, createAssignment);
 router.get("/", getAssignments);
-router.put("/:id", ensureAuth, ensureTeacher, updateAssignment);
-router.delete("/:id", ensureAuth, ensureTeacher, deleteAssignment);
+router.put("/:id", ensureTeacher, updateAssignment);
+router.delete("/:id", ensureTeacher, deleteAssignment);
 
 module.exports = router;
