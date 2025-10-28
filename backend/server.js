@@ -40,13 +40,9 @@ app.use(
   })
 );
 
-const FRONTENDS = (process.env.FRONTEND_URL || "")
-  .split(",")
-  .map((url) => url.trim());
-
 app.use(
   cors({
-    origin: FRONTENDS,
+    origin: "https://student-teacher-connect-six.vercel.app",
     credentials: true,
   })
 );
