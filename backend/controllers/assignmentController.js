@@ -37,7 +37,16 @@ const createAssignment = async (req, res) => {
 // ✅ Get all assignments (Students + Teachers)
 const getAssignments = async (req, res) => {
   try {
-    const assignments = await Assignment.find().populate(
+    const sessUser = req.session?.user;
+    let query = {};
+
+    if (sessUser && sessUser.role === "Teacher") {
+      // Teachers see only their own assignments
+      query.teacher = sessUser._id;
+    }
+    // Students and others see all assignments (no filter)
+
+    const assignments = await Assignment.find(query).populate(
       "teacher",
       "name email"
     );
