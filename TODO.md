@@ -1,0 +1,3 @@
+- [x] Modify assignmentController.js: Remove auth checks from createAssignment, updateAssignment, deleteAssignment; allow anyone to perform operations; for create, set teacher if logged in as teacher.
+- [ ] Test backend server to ensure CRUD works without auth.
+- [ ] Verify teacher details stored during creation if logged in.
